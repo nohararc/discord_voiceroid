@@ -3,13 +3,14 @@ import asyncio
 
 from discord.ext import commands
 from text2wav import text2wav
+import os
 import private
 import re
 
+token = os.environ['DISCORD_BOT_TOKEN']
 
 def main():
     bot = commands.Bot(command_prefix="!")
-    token = private.token
 
     @bot.event
     async def on_ready():
