@@ -1,0 +1,3 @@
+private.py
+*.wav
+__pycache__/

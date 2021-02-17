@@ -5,11 +5,33 @@ from discord.ext import commands
 from text2wav import text2wav
 import private
 import re
-
+import pyvcroid2
 
 def main():
     bot = commands.Bot(command_prefix="!")
     token = private.token
+
+    # voiceroid2 client
+    vc = pyvcroid2.VcRoid2()
+    lang_list = vc.listLanguages()
+    if "standard" in lang_list:
+        vc.loadLanguage("standard")
+    else:
+        raise Exception("No language library")
+
+    voice_list = vc.listVoices()
+    if 0 < len(voice_list):
+        vc.loadVoice(voice_list[0])
+    else:
+        raise Exception("No voice library")
+    vc.param.volume = 1.0
+    vc.param.speed = 1.0
+    vc.param.pitch = 1.0
+    vc.param.emphasis = 1.0
+    vc.param.pauseMiddle = 80
+    vc.param.pauseLong = 100
+    vc.param.pauseSentence = 200
+    vc.param.masterVolume = 1.0
 
     @bot.event
     async def on_ready():
@@ -57,7 +79,7 @@ def main():
 
 
         # テキストをwavファイルに変換してボイチャに流す
-        source = discord.FFmpegPCMAudio(text2wav(message.content))
+        source = discord.FFmpegPCMAudio(text2wav(vc, message.content))
         voice_client.play(source)
 
     bot.run(token)

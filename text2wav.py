@@ -1,35 +1,33 @@
-import requests
-import json
-
-
 def main():
-    url = "http://127.0.0.1:8080/api/speechtext/"
-    text = "おいおいおいおい"
-    json_dict = {
-        "Text": text,
-        "Kana" : text,
-        "Speaker": {
-            "Volume": 2,
-            "Speed": 2,
-            "Pitch" : 1,
-            "Emphasis": 1,
-            "PauseMiddle" : 100,
-            "PauseLong" : 200,
-            "PauseSentence" : 0
-        }
-    }
-    res = requests.post(url, data=json.dumps(json_dict))
-    print(res.json())
-    with open("temp.wav", "wb") as file:
-        file.write(res.content)
+    vc = pyvcroid2.VcRoid2()
+    lang_list = vc.listLanguages()
+    if "standard" in lang_list:
+        vc.loadLanguage("standard")
+    else:
+        raise Exception("No language library")
 
+    voice_list = vc.listVoices()
+    if 0 < len(voice_list):
+        vc.loadVoice(voice_list[0])
+    else:
+        raise Exception("No voice library")
+    vc.param.volume = 1.0
+    vc.param.speed = 1.0
+    vc.param.pitch = 1.0
+    vc.param.emphasis = 1.0
+    vc.param.pauseMiddle = 80
+    vc.param.pauseLong = 100
+    vc.param.pauseSentence = 200
+    vc.param.masterVolume = 1.0
 
-def text2wav(text):
-    url = f"http://127.0.0.1:8080/api/speechtext/{text}"
-    res = requests.get(url)
+    text2wav("おはよう")
+
+def text2wav(vc, text):
     filename = "temp.wav"
-    with open(filename, "wb") as file:
-        file.write(res.content)
+    speech, tts_events = vc.textToSpeech(text)
+
+    with open(filename, mode="wb") as f:
+        f.write(speech)
     return filename
 
 
