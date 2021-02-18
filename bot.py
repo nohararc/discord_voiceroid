@@ -7,6 +7,7 @@ import private
 import re
 import pyvcroid2
 
+
 def main():
     bot = commands.Bot(command_prefix="!")
     token = private.token
@@ -42,7 +43,6 @@ def main():
         server = ctx.message.guild.voice_client
         await server.disconnect()
 
-
     @bot.event
     async def on_message(message):
         # bot自身のメッセージは何もしない
@@ -62,7 +62,6 @@ def main():
             user_name = bot.get_user(int(m.group("user_id"))).name
             message.content = re.sub(pattern, user_name, message.content)
 
-
         # 文字が長すぎると区切る
         max_length = 30
         if len(message.content) > max_length:
@@ -71,12 +70,12 @@ def main():
         # 通話に参加
         voice_client = message.guild.voice_client
         if not voice_client:
-            voice_client = await bot.get_channel(private.voice_channel_id).connect()
+            voice_client = await bot.get_channel(private.voice_channel_id
+                                                 ).connect()
 
         # 喋っている途中は待つ
         while voice_client.is_playing():
             await asyncio.sleep(0.5)
-
 
         # テキストをwavファイルに変換してボイチャに流す
         source = discord.FFmpegPCMAudio(text2wav(vc, message.content))
