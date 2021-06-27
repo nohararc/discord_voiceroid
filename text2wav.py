@@ -1,3 +1,5 @@
+import pyvcroid2
+
 def main():
     vc = pyvcroid2.VcRoid2()
     lang_list = vc.listLanguages()
@@ -20,7 +22,7 @@ def main():
     vc.param.pauseSentence = 200
     vc.param.masterVolume = 1.0
 
-    text2wav("おはよう")
+    text2wav(vc, "おはよう")
 
 def text2wav(vc, text):
     filename = "temp.wav"
