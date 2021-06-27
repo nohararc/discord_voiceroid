@@ -8,4 +8,4 @@
     - pip install git+https://github.com/Rapptz/discord.py.git
       - 2.0.0a3267+gd30fea5bで動作確認済み
     - pip install -r requirements.txt
-- `python bot.py`
+- `python main.py`
